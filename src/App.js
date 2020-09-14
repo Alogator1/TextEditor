@@ -5,8 +5,10 @@ import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import { connect } from "react-redux";
 
-function App() {
+
+function App(props) {
   const [color, setColor] = useState("red");
   const [bgColor, setBgColor] = useState("red");
   const [fontsize, setFontsize] = useState("14");
@@ -40,6 +42,7 @@ function App() {
     setInputText(e.target.value);
   }
 
+  console.log(props.testStore);
   return (
     <div className="App">
       <h1>Text editor</h1>
@@ -96,9 +99,26 @@ function App() {
         <Button variant="contained" color="primary" type="submit">
           Primary
         </Button>
+        <div>
+          {props.testStore.map((text, index)=>(
+            <span key={index} style={{
+              color: text.color,
+              backgroundColor: text.bgcolor,
+              fontSize: text.fontsize
+            }}>{text.text}</span>
+  ))}
+        </div>
       </form>
+      <div>
+
+      </div>
     </div>
   );
 }
 
-export default App;
+export default connect(
+  state => ({
+    testStore: state
+  }),
+  dispatch => ({})
+)(App);
