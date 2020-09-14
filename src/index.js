@@ -5,28 +5,38 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
+import reducer from "./redux/reducers";
 
-const initialState = [
-  { color: "red", bgcolor: "red", fontsize: 14, text: "Init message", id: new Date().valueOf() }
-]
+// const initialState = {
+//   color: "red",
+//   bgColor: "red",
+//   fontsize: 14,
+//   text: "Init text",
+//   spans: [{ color: "blue", bgcolor: "green", fontsize: 20, text: "Hello world", id:new Date().valueOf()}]
+// }
 
-function spans(state = initialState, action) {
-  if (action.type == "ADD_SPAN") {
-    return [...state, action.payload];
-  }
-  return state;
-}
+// function spans(state = initialState, action) {
+//   if (action.type == "ADD_SPAN") {
+//     console.log("from dispatch ", action.payload);
+//     let newSpans = state.spans;
+//     newSpans.push(action.payload);
+//     return {
+//       ...state,
+//       spans: newSpans
+//     }
+//   }
+//   return state;
+// }
 
-const store = createStore(spans);
+const store = createStore(reducer, window.__REDUX_DEVTOOLS_EXTENSION__&&window.__REDUX_DEVTOOLS_EXTENSION__());
 
 store.subscribe(() => {
-  console.log("subscribe ", store.getState());
 });
 
-store.dispatch({
-  type: "ADD_SPAN",
-  payload: { color: "blue", bgcolor: "green", fontsize: 20, text: "Hello world", id: new Date().valueOf() },
-});
+// store.dispatch({
+//   type: "ADD_SPAN",
+//   payload: { color: "blue", bgcolor: "green", fontsize: 20, text: "Hello world", id:new Date().valueOf() },
+// });
 
 ReactDOM.render(
   <React.StrictMode>

@@ -1,4 +1,4 @@
-import React, {useState } from "react";
+import React, { useState } from "react";
 import "./App.css";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
@@ -7,11 +7,10 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { connect } from "react-redux";
 
-
 function App(props) {
   const [color, setColor] = useState("red");
   const [bgColor, setBgColor] = useState("red");
-  const [fontsize, setFontsize] = useState("14");
+  const [fontsize, setFontsize] = useState(14);
   const [inputText, setInputText] = useState("");
 
   function selection(e) {
@@ -29,20 +28,25 @@ function App(props) {
       default:
         console.log("No data!");
     }
-
-    console.log(e.target);
   }
 
   function formSubmit(e) {
     e.preventDefault();
-    console.log(color, bgColor, fontsize, inputText);
+    props.onAddSpan({
+      color: color,
+      bgcolor: bgColor,
+      fontsize: +fontsize,
+      text: inputText,
+      id: new Date().valueOf(),
+    });
+    setInputText("");
   }
+
+  console.log(props.spans);
 
   function handleChange(e) {
     setInputText(e.target.value);
   }
-
-  console.log(props.testStore);
   return (
     <div className="App">
       <h1>Text editor</h1>
@@ -99,26 +103,32 @@ function App(props) {
         <Button variant="contained" color="primary" type="submit">
           Primary
         </Button>
-        <div>
-          {props.testStore.map((text, index)=>(
-            <span key={index} style={{
-              color: text.color,
-              backgroundColor: text.bgcolor,
-              fontSize: text.fontsize
-            }}>{text.text}</span>
-  ))}
-        </div>
       </form>
       <div>
-
+        {props.spans.map((text, index) => (
+          <span
+            key={index}
+            style={{
+              color: text.color,
+              backgroundColor: text.bgcolor,
+              fontSize: text.fontsize,
+            }}
+          >
+            {text.text}
+          </span>
+        ))}
       </div>
     </div>
   );
 }
 
 export default connect(
-  state => ({
-    testStore: state
+  (state) => ({
+    spans: state.spans,
   }),
-  dispatch => ({})
+  (dispatch) => ({
+    onAddSpan: (spanProps) => {
+      dispatch({ type: "ADD_SPAN", payload: spanProps });
+    },
+  })
 )(App);
