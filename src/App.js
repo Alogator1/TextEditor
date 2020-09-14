@@ -125,6 +125,7 @@ function App(props) {
 export default connect(
   (state) => ({
     spans: state.spans,
+    config: state.config
   }),
   (dispatch) => ({
     onAddSpan: (spanProps) => {

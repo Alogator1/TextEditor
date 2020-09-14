@@ -6,7 +6,16 @@ const initialState = {
   }
 
 export default function configs(state = initialState, action) {
-    if (action.type == "CHANGE_CONFIG") {
+    switch(action.type){
+      case "CHANGE_COLOR":
+        return {...state, color: action.payload}
+      case "CHANGE_BGCOLOR":
+        return {...state, bgColor: action.payload}
+      case "CHANGE_FONTSIZE":
+        return {...state, fontsize: action.payload}
+      case "CHANGE_TEXT":
+        return {...state, text: action.payload}
+      default:
+        return state;
     }
-    return state;
   }
