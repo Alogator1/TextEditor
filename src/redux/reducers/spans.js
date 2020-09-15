@@ -33,7 +33,6 @@ export default function spans(state = initialState, action) {
     let newState = state.concat();
     let indexOf = newState.findIndex((s) => s.id == action.payload);
     newState.splice(indexOf, 1);
-    console.log("index of deleteble", indexOf, newState.length);
     if (newState.length != 1 && indexOf != newState.length) {
       checkArrays(newState, indexOf - 1, indexOf);
     }
@@ -48,8 +47,8 @@ export default function spans(state = initialState, action) {
       text: action.payload.text,
       id: action.payload.id,
     };
-    if (newState.length == 1) return [...newState];
-    console.log(indexOf);
+    if (newState.length == 1) 
+      return [...newState];
     if (indexOf == newState.length - 1) {
       checkArrays(newState, indexOf - 1, indexOf);
     } else if (indexOf == 0) {
