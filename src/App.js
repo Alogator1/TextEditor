@@ -6,6 +6,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { connect } from "react-redux";
+import {changeBgColor,changeColor,changeFontsize,changeText} from "./redux/actions/changeConfig"
 
 function App(props) {
   const [color, setColor] = useState("red");
@@ -13,10 +14,13 @@ function App(props) {
   const [fontsize, setFontsize] = useState(14);
   const [inputText, setInputText] = useState("");
 
+  console.log(props);
+
   function selection(e) {
     console.log(e.target.name);
     switch (e.target.name) {
       case "color":
+        //dispatch(changeColor(e.target.value))  <-- вот тут трабл
         setColor(e.target.value);
         break;
       case "font":
