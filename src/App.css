@@ -1,4 +1,17 @@
 *{
-  margin: 0;
+  margin-right: 0;
   padding: 0;
+}
+.App{
+  margin-left: 10%;
+}
+.spans{
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.buttons{
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  width: 20%;
 }

@@ -6,21 +6,17 @@ import InputLabel from "@material-ui/core/InputLabel";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { connect } from "react-redux";
-import {changeBgColor,changeColor,changeFontsize,changeText} from "./redux/actions/changeConfig"
 
 function App(props) {
   const [color, setColor] = useState("red");
   const [bgColor, setBgColor] = useState("red");
   const [fontsize, setFontsize] = useState(14);
   const [inputText, setInputText] = useState("");
-
-  console.log(props);
+  const [spanId, setSpanId] = useState(0);
 
   function selection(e) {
-    console.log(e.target.name);
     switch (e.target.name) {
       case "color":
-        //dispatch(changeColor(e.target.value))  <-- вот тут трабл
         setColor(e.target.value);
         break;
       case "font":
@@ -36,6 +32,10 @@ function App(props) {
 
   function formSubmit(e) {
     e.preventDefault();
+    if (!inputText) {
+      alert("Enter some text!");
+      return;
+    }
     props.onAddSpan({
       color: color,
       bgcolor: bgColor,
@@ -46,14 +46,47 @@ function App(props) {
     setInputText("");
   }
 
-  console.log(props.spans);
-
   function handleChange(e) {
     setInputText(e.target.value);
   }
+
+  function spanSelect(e) {
+    setSpanId(e);
+  }
+
+  function changeSpan() {
+    if (spanId) {
+      props.onChangeSpan({
+        color: color,
+        bgcolor: bgColor,
+        fontsize: +fontsize,
+        text: inputText,
+        id: spanId,
+      });
+    } else {
+      alert("Choose text to change!");
+    }
+  }
+
+  function deleteSpan() {
+    if (spanId) {
+      props.onDeleteSpan(spanId);
+      setSpanId(0);
+    } else {
+      alert("Choose text to delete!");
+    }
+  }
+
+  function getJson() {
+    console.log(JSON.stringify(props.spans));
+  }
+
   return (
     <div className="App">
       <h1>Text editor</h1>
+      <h5>
+        To change/delete span, select params, then click on it and press button
+      </h5>
       <form noValidate autoComplete="off" onSubmit={formSubmit}>
         <InputLabel id="label">Color</InputLabel>
         <Select
@@ -67,6 +100,8 @@ function App(props) {
           <MenuItem value="red">Red</MenuItem>
           <MenuItem value="green">Green</MenuItem>
           <MenuItem value="blue">Blue</MenuItem>
+          <MenuItem value="black">Black</MenuItem>
+          <MenuItem value="white">White</MenuItem>
         </Select>
         <InputLabel id="bg">Bg color</InputLabel>
         <Select
@@ -80,6 +115,8 @@ function App(props) {
           <MenuItem value="red">Red</MenuItem>
           <MenuItem value="green">Green</MenuItem>
           <MenuItem value="blue">Blue</MenuItem>
+          <MenuItem value="black">Black</MenuItem>
+          <MenuItem value="white">White</MenuItem>
         </Select>
         <InputLabel id="font">Font size</InputLabel>
         <Select
@@ -98,17 +135,27 @@ function App(props) {
           <MenuItem value="22">22</MenuItem>
           <MenuItem value="24">24</MenuItem>
         </Select>
+        <InputLabel id="text">Text</InputLabel>
         <TextField
           id="standard-basic"
+          name="text"
           label="Enter text"
           value={inputText}
           onChange={handleChange}
         />
-        <Button variant="contained" color="primary" type="submit">
-          Primary
-        </Button>
+        <div className="buttons">
+          <Button variant="contained" color="primary" type="submit">
+            ADD
+          </Button>
+          <Button variant="contained" color="secondary" onClick={deleteSpan}>
+            DELETE
+          </Button>
+          <Button variant="contained" color="default" onClick={changeSpan}>
+            CHANGE
+          </Button>
+        </div>
       </form>
-      <div>
+      <div className="spans">
         {props.spans.map((text, index) => (
           <span
             key={index}
@@ -116,12 +163,18 @@ function App(props) {
               color: text.color,
               backgroundColor: text.bgcolor,
               fontSize: text.fontsize,
+              marginRight: "5px",
             }}
+            spanid={text.id}
+            onClick={() => spanSelect(text.id)}
           >
             {text.text}
           </span>
         ))}
       </div>
+      <Button variant="contained" color="default" onClick={getJson}>
+        GET JSON
+      </Button>
     </div>
   );
 }
@@ -129,11 +182,16 @@ function App(props) {
 export default connect(
   (state) => ({
     spans: state.spans,
-    config: state.config
   }),
   (dispatch) => ({
     onAddSpan: (spanProps) => {
       dispatch({ type: "ADD_SPAN", payload: spanProps });
+    },
+    onDeleteSpan: (spanProps) => {
+      dispatch({ type: "DELETE_SPAN", payload: spanProps });
+    },
+    onChangeSpan: (spanProps) => {
+      dispatch({ type: "CHANGE_SPAN", payload: spanProps });
     },
   })
 )(App);
