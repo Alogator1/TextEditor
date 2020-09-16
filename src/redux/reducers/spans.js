@@ -55,7 +55,7 @@ export default function spans(state = initialState, action) {
       checkArrays(newState, 0, 1);
     } else {
       if (!checkArrays(newState, indexOf, indexOf + 1)) {
-        checkArrays(newState, indexOf, indexOf - 1);
+        checkArrays(newState, indexOf-1, indexOf);
       }
     }
     return [...newState];
